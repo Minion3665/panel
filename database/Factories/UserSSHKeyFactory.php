@@ -17,6 +17,7 @@ class UserSSHKeyFactory extends Factory
         'rsa_2048' => 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC4VVsHFO5MxvCtAPyoKGANWyuwZ4fvllvFog5RJbfpDpw8etDFVGEXl+uRR8p79g9oV7MscoFo6HiWrJc4/4vlP665msjosILdIcbnuzMhvXnKisaGh9zflkpyR3KhUxoHxqYp2q8XtffjKKAHz1a8o7OUG6fwaKIqu+d0PoICZQ==',
         'rsa_4096' => 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCo/YLm2SPSlOIG7AagBSmEe5c0b2PLPzUGFp3gARhD6n6ydBS40TlWzeg2qV95lh6fWBd8LsNgPOFmmuKuNZdBjAGeTY4gxKfHY1vK5/zOI4jPPqAMcCMNfd82aM97kx6dO8Hw1R79OyVpOZylpXLHayVPGHUK37Tpih4W7TeVSMrOqQF9F72lzhwgEtkdjm4gLBL6RpdNXrdnjIaNVnuade0Sb3w384vecZPe+S/997WirOMNy2JU4NdMHEnSjd1/i463RpN96AsXFAu1zl9nrXVhA7DVfSHoigXAqbs/xav8PRpLgAKjYpPohxQ9Nu6tP5jRUhfWdYwNFFp/aWloD/0JdP9LqcBBc9sO9TLkz3fBiUf11VM/QT1UhO84G+ahMxVn95jA472VPUe8uKff69lzbvSavEE6qcQX2TzVKOSi1E26Fzc6IZ/tHEuGEbGFxTsiQ1GysVZ0wr1p6ftd1SVqH5F/oaEK7UO8+xn/syEqaPf6A0eJWRNc0+lHA1sIRjmo9MOBvbkKExkx5JLHgGG81DYDFdZUuHY1BgSxJJcmNWV5BKRm350EbgRngoYI5tB3tCiZVW1PI8qyff9mBae11LY5GPlUeDnPrMvSdCKMIWrg7nC8SbndBCO3Fx4z7G2dTQy4ZmY7Ae9jR4pyg7tTOI3qgl8Z462GZi/jzw==',
         'ed25519' => 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOaXIq09NH4a93EVdrvHYiZ67Wj+GBEBQ9ou4W0qSYm2',
+        'ed25519-sk' => 'sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIOYXp7rwWN6zqu27jW5KVgjnMLewEzmW6a9HveZYR/hXAAAABHNzaDo=',
     ];
 
     /**
@@ -33,6 +34,19 @@ class UserSSHKeyFactory extends Factory
             'public_key' => $key->toString('PKCS8'),
             'fingerprint' => $key->getFingerprint('sha256'),
         ];
+    }
+
+    /**
+     * Returns a ed25519-sk public key.
+     */
+    public function ed25519_sk(): self
+    {
+        $key = PublicKeyLoader::loadPublicKey(static::$keys['ed25519-sk']);
+
+        return $this->state([
+            'public_key' => $key->toString('PKCS8'),
+            'fingerprint' => $key->getFingerprint('sha256'),
+        ]);
     }
 
     /**
