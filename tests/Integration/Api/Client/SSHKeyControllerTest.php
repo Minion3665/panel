@@ -127,6 +127,23 @@ class SSHKeyControllerTest extends ClientApiIntegrationTestCase
         $this->assertEquals($key->public_key, $user->sshKeys[0]->public_key);
     }
 
+    public function testPublicKeyWithSecurityKeyCanBeStored()
+    {
+        $user = User::factory()->create();
+        $key = UserSSHKey::factory()->ed25519_sk()->make();
+
+        $this->actingAs($user)->postJson('/api/client/account/ssh-keys', [
+            'name' => 'Name',
+            'public_key' => $key->public_key,
+        ])
+            ->assertOk()
+            ->assertJsonPath('object', UserSSHKey::RESOURCE_NAME)
+            ->assertJsonPath('attributes.public_key', $key->public_key);
+
+        $this->assertCount(1, $user->sshKeys);
+        $this->assertEquals($key->public_key, $user->sshKeys[0]->public_key);
+    }
+
     public function testPublicKeyThatAlreadyExistsCannotBeAddedASecondTime()
     {
         $user = User::factory()->create();
